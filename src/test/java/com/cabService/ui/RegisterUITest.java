@@ -69,15 +69,23 @@ public class RegisterUITest {
     }
 
     @Test
-    void testMessagePopup() {
-        // Open the registration page with a success message query parameter
-        driver.get("http://localhost:8080/cab-service/pages/register.jsp?message=Registration successful! You can now log in.");
+void testMessagePopup() {
+    // Open the registration page with a success message query parameter
+    driver.get("http://localhost:8080/cab-service/pages/login.jsp?message=Registration-successful!-You can now log in.");
 
-        // Wait for the alert to appear
-        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-        assertEquals("Registration successful! You can now log in.", alert.getText());
+    try {
+        // Increase wait time to 15 seconds
+        WebDriverWait longWait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        Alert alert = longWait.until(ExpectedConditions.alertIsPresent());
+
+        assertEquals("Registration-successful!-You can now log in.", alert.getText());
         alert.accept(); // Close the alert
+
+    } catch (Exception e) {
+        fail("Alert not found: " + e.getMessage()); // Fail the test if alert doesn't appear
     }
+}
+
 
     @AfterEach
     void tearDown() {

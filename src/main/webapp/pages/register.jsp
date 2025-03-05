@@ -77,7 +77,7 @@
         <input type="text" name="phone" placeholder="Phone Number" required autocomplete="tel">
         <button type="submit">Register</button>
         
-<!--         <p class="register-link">Already have an account? <a href="${pageContext.request.contextPath}/pages/login.jsp">Login here</a></p>-->
+         <p class="register-link">Already have an account? <a href="${pageContext.request.contextPath}/pages/login.jsp">Login here</a></p>
 
     </form>
 

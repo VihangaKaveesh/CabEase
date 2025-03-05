@@ -1,3 +1,6 @@
+com\cabService\dao\ManagementDAOTest.class
+com\cabService\ui\LoginUITest.class
 com\cabService\controller\RegisterServletTest.class
 com\cabService\dao\CustomerDAOTest.class
 com\cabService\ui\RegisterUITest.class
+com\cabService\controller\LoginServletTest.class

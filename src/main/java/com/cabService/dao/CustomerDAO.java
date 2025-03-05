@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.cabService.dao.DBConnection;
+import jakarta.servlet.http.HttpSession;
+import java.sql.ResultSet;
 
 public class CustomerDAO {
     private Connection connection;
@@ -53,5 +55,28 @@ public class CustomerDAO {
     }
     return success;
 }
+    
+     // Validating the customer upon login
+    public int validateCustomer(String email, String password, HttpSession session) {
+        int customerId = -1;
+        String query = "SELECT CustomerID FROM customers WHERE Email = ? AND Password = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    customerId = rs.getInt("CustomerID");
+                    session.setAttribute("role", "customer");  // Store session role
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log exception properly
+        }
+
+        return customerId;
+    }
+
 
 }
