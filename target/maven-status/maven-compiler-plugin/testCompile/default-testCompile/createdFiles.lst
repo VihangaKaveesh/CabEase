@@ -1,0 +1,3 @@
+com\cabService\controller\RegisterServletTest.class
+com\cabService\dao\CustomerDAOTest.class
+com\cabService\ui\RegisterUITest.class
