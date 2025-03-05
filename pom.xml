@@ -20,14 +20,19 @@
             <scope>provided</scope>
         </dependency>
         
-        <!-- JUnit 5 -->
+       <!-- JUnit 5 -->
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>5.8.1</version>
+        <version>5.9.2</version>
         <scope>test</scope>
     </dependency>
-
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.9.2</version>
+    </dependency>
+    
     <!-- Mockito for mocking DAO -->
     <dependency>
         <groupId>org.mockito</groupId>
@@ -50,12 +55,27 @@
         <version>8.0.33</version> <!-- Use the latest version -->
     </dependency>
     
-<!--    selenium-->
+    
+   <!-- Selenium -->
     <dependency>
-    <groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>selenium-java</artifactId>
-    <version>4.1.2</version>
-</dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.16.1</version>
+    </dependency>
+
+    <!-- WebDriver Manager -->
+    <dependency>
+        <groupId>io.github.bonigarcia</groupId>
+        <artifactId>webdrivermanager</artifactId>
+        <version>5.6.4</version>
+    </dependency>
+
+    <!-- Maven Surefire Plugin (Ensure JUnit 5 Tests Are Executed) -->
+    <dependency>
+        <groupId>org.apache.maven.surefire</groupId>
+        <artifactId>surefire-junit-platform</artifactId>
+        <version>3.0.0-M7</version>
+    </dependency>
 
  <!-- Jakarta EE Servlet API (for mocking HttpServletRequest & HttpServletResponse) -->
     <dependency>
@@ -64,8 +84,7 @@
         <version>5.0.0</version>
         <scope>provided</scope>
     </dependency>
-
-
+     
     </dependencies>
     
     <build>

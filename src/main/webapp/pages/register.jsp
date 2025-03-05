@@ -55,16 +55,26 @@
                 text-decoration: underline;
         }
     </style>
+    
+     <script>
+            window.onload = function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('message')) {
+                    alert(urlParams.get('message'));
+                }
+            };
+            
+        </script>
     </head>
     <body>
 
     <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
         <h2>Register</h2>
-        <input type="text" name="nic" placeholder="NIC" required>
-        <input type="text" name="name" placeholder="Full Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="text" name="phone" placeholder="Phone Number" required>
+        <input type="text" name="nic" placeholder="NIC" autocomplete="off" required>
+        <input type="text" name="name" placeholder="Full Name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email" required autocomplete="email">
+        <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+        <input type="text" name="phone" placeholder="Phone Number" required autocomplete="tel">
         <button type="submit">Register</button>
         
 <!--         <p class="register-link">Already have an account? <a href="${pageContext.request.contextPath}/pages/login.jsp">Login here</a></p>-->

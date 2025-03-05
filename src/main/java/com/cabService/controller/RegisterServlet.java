@@ -28,6 +28,13 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
+        
+        // Log the received data
+    System.out.println("Received Registration Data:");
+    System.out.println("NIC: " + nic);
+    System.out.println("Name: " + name);
+    System.out.println("Email: " + email);
+    System.out.println("Phone: " + phone);
 
         boolean isRegistered = customerDAO.registerCustomer(nic, name, email, password, phone);
 
