@@ -1,0 +1,5 @@
+com\cabService\dao\CustomerDAO.class
+com\mycompany\cab\service\JakartaRestConfiguration.class
+com\cabService\controller\RegisterServlet.class
+com\mycompany\cab\service\resources\JakartaEE10Resource.class
+com\cabService\dao\DBConnection.class
