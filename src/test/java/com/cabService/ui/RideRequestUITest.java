@@ -36,8 +36,8 @@ public class RideRequestUITest {
         WebElement passwordField = driver.findElement(By.name("password"));
         WebElement loginButton = driver.findElement(By.cssSelector("button[type='submit']"));
 
-        // Provide valid credentials (change accordingly)
-        emailField.sendKeys("customer@example.com");
+        // Provide valid credentials
+        emailField.sendKeys("john.doe@example.com");
         passwordField.sendKeys("password123");
         loginButton.click();
 
