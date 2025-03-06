@@ -4,4 +4,6 @@ com\cabService\dao\CustomerDAO.class
 com\cabService\dao\ManagementDAO.class
 com\cabService\controller\RegisterServlet.class
 com\mycompany\cab\service\resources\JakartaEE10Resource.class
+com\cabService\controller\BookingServlet.class
+com\cabService\dao\BookingDAO.class
 com\cabService\dao\DBConnection.class
