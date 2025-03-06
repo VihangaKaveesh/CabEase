@@ -20,6 +20,7 @@ import org.openqa.selenium.NoAlertPresentException;
 
 public class LoginUITest {
 
+
     private WebDriver driver;
     private WebDriverWait wait;
 
