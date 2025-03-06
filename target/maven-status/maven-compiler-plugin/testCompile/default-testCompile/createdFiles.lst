@@ -1,4 +1,5 @@
 com\cabService\ui\LoginUITest.class
+com\cabService\ui\RideRequestUITest.class
 com\cabService\controller\LoginServletTest.class
 com\cabService\dao\ManagementDAOTest.class
 com\cabService\dao\BookingDAOTest.class
