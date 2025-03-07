@@ -6,23 +6,28 @@ package com.cabService.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
  * @author vihan
  */
 public class BookingDAO {
-    private Connection connection;
+   private Connection connection;
 
-    // Constructor to inject a connection (for testing)
-    public BookingDAO(Connection connection) {
-        this.connection = connection;
+    // Constructor for production
+    public BookingDAO() throws SQLException {
+        this.connection = DBConnection.getConnection(); // Original connection setup
     }
 
-    // Default constructor for real usage
-    public BookingDAO() throws SQLException {
-        this.connection = DBConnection.getConnection(); // Keep real connection for non-test cases
+    // Constructor for testing (dependency injection)
+    public BookingDAO(Connection connection) {
+        this.connection = connection; // Allows injection of mocked connection for testing
     }
     
      public boolean addBooking(int customerId, String pickupLocation, String dropoffLocation, int packageId) {
@@ -54,4 +59,38 @@ public class BookingDAO {
         }
     }
 }
+     
+       public List<HashMap<String, String>> getCustomerBookings(int customerID) throws SQLException {
+        List<HashMap<String, String>> bookings = new ArrayList<>();
+
+        String sql = "SELECT b.BookingID, b.PickupLocation, b.DropoffLocation, b.BookingDate, " +
+                     "p.VehicleType, p.Price, b.Status " +
+                     "FROM bookings b " +
+                     "JOIN ridepackages p ON b.PackageID = p.PackageID " +
+                     "WHERE b.CustomerID = ? " +
+                     "ORDER BY b.BookingDate DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+             
+            ps.setInt(1, customerID);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                HashMap<String, String> booking = new HashMap<>();
+                booking.put("BookingID", String.valueOf(rs.getInt("BookingID")));
+                booking.put("PickupLocation", rs.getString("PickupLocation"));
+                booking.put("DropoffLocation", rs.getString("DropoffLocation"));
+
+                Timestamp bookingDate = rs.getTimestamp("BookingDate");
+                booking.put("Date", bookingDate != null ? bookingDate.toString() : "N/A");
+
+                booking.put("VehicleType", rs.getString("VehicleType"));
+                booking.put("Price", String.valueOf(rs.getDouble("Price")));
+                booking.put("Status", rs.getString("Status"));
+
+                bookings.add(booking);
+            }
+        }
+        return bookings;
+    }
 }

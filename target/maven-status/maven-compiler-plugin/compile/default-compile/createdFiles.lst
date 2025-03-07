@@ -2,6 +2,7 @@ com\cabService\controller\LoginServlet.class
 com\mycompany\cab\service\JakartaRestConfiguration.class
 com\cabService\dao\CustomerDAO.class
 com\cabService\dao\ManagementDAO.class
+com\cabService\controller\BookingHistoryServlet.class
 com\cabService\controller\RegisterServlet.class
 com\mycompany\cab\service\resources\JakartaEE10Resource.class
 com\cabService\controller\BookingServlet.class
