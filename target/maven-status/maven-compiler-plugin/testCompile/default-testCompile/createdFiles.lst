@@ -7,5 +7,6 @@ com\cabService\dao\BookingDAOTest.class
 com\cabService\controller\BookingServletTest.class
 com\cabService\controller\RegisterServletTest.class
 com\cabService\dao\CustomerDAOTest.class
+com\cabService\ui\BookingHistoryUITest.class
 com\cabService\ui\RegisterUITest.class
 com\cabService\dao\BookingHistoryDAOTest.class
