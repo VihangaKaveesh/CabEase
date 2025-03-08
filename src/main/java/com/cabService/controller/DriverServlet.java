@@ -1,5 +1,6 @@
 package com.cabService.controller;
 
+import com.cabService.dao.CustomerDAO;
 import com.cabService.dao.DBConnection;
 import com.cabService.dao.DriverDAO;
 import java.io.IOException;
@@ -11,7 +12,21 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DriverServlet extends HttpServlet {
-    protected DriverDAO driverDAO;
+     DriverDAO driverDAO;
+
+    // Default constructor (for production use)
+    public DriverServlet() throws SQLException {
+        this.driverDAO = new DriverDAO(); // Uses real DB connection
+    }
+
+    // Constructor for testing (injects a mock DAO)
+    public DriverServlet(DriverDAO driverDAO) {
+        this.driverDAO = driverDAO;
+    }
+
+//    public DriverServlet(DriverDAO mockDriverDAO) {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
 
     @Override
     public void init() throws ServletException {

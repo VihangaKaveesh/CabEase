@@ -1,27 +1,27 @@
 package com.cabService.ui;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import java.time.Duration;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.openqa.selenium.support.ui.Select;
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class) // Ensures order of execution
 public class ManageDriverUITest {
-
     private WebDriver driver;
     private WebDriverWait wait;
+    private final String BASE_URL = "http://localhost:8080/cab-service/pages/manageDrivers.jsp";
 
     @BeforeEach
     public void setUp() {
-        WebDriverManager.chromedriver().driverVersion("134.0.6998.36").setup();
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
@@ -29,67 +29,77 @@ public class ManageDriverUITest {
     }
 
     @Test
-    public void testManageDriversPage() {
-        // Navigate directly to manageDrivers.jsp page
-        driver.get("http://localhost:8080/cab-service/pages/manageDrivers.jsp");
+    @Order(1)
+void testAddDriverWithDummyData() {
+    // Open the manage drivers page
+    driver.get("http://localhost:8080/cab-service/pages/manageDrivers.jsp");
 
-        // Ensure the correct page is loaded
-        assertTrue(driver.getTitle().contains("Manage Drivers"), "Incorrect page title!");
+    // Wait for the email field to be visible
+    WebElement nicField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("nic")));
+    WebElement nameField = driver.findElement(By.name("name"));
+    WebElement emailField = driver.findElement(By.name("email"));
+    WebElement phoneField = driver.findElement(By.name("phone"));
+    WebElement licenseField = driver.findElement(By.name("licenseNumber"));
+    WebElement vehicleTypeField = driver.findElement(By.name("vehicleType"));
+    WebElement vehicleModelField = driver.findElement(By.name("vehicleModel"));
+    WebElement addButton = driver.findElement(By.xpath("//button[text()='Add Driver']"));
 
-        // Add a new driver
-        WebElement nicField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("nic")));
-        WebElement nameField = driver.findElement(By.name("name"));
-        WebElement emailField = driver.findElement(By.name("email"));
-        WebElement phoneField = driver.findElement(By.name("phone"));
-        WebElement licenseField = driver.findElement(By.name("licenseNumber"));
-        WebElement vehicleTypeDropdown = driver.findElement(By.name("vehicleType"));
-        WebElement vehicleModelField = driver.findElement(By.name("vehicleModel"));
-        WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
+    // Provide dummy driver details
+    nicField.sendKeys("987654321V");
+    nameField.sendKeys("Jane Smith");
+    emailField.sendKeys("jane.smith@example.com");
+    phoneField.sendKeys("0723456789");
+    licenseField.sendKeys("LIC67890");
+    vehicleTypeField.sendKeys("SUV");
+    vehicleModelField.sendKeys("Honda CR-V");
 
-        nicField.sendKeys("S123456789V");
-        nameField.sendKeys("John Doe");
-        emailField.sendKeys("johndoe@example.com");
-        phoneField.sendKeys("1234567890");
-        licenseField.sendKeys("ABC123456");
-        Select select = new Select(vehicleTypeDropdown);
-        select.selectByVisibleText("Car");
-        vehicleModelField.sendKeys("Toyota Corolla");
+    // Click Add Driver button
+    addButton.click();
 
-        submitButton.click();
+    // Handle the alert
+    Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+    String alertMessage = alert.getText();
+    assertTrue(alertMessage.contains("Driver added"), "Driver added alert not displayed");
+    alert.accept();
 
-        try {
-            // Wait for and accept the driver addition success alert
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            assertEquals("Driver added successfully!", alert.getText());
-            alert.accept();
-        } catch (NoAlertPresentException e) {
-            fail("Driver added success alert not found: " + e.getMessage());
-        }
+    // Verify driver in table
+    WebElement driverTable = driver.findElement(By.tagName("table"));
+    assertTrue(driverTable.getText().contains("Jane Smith"), "Driver not added to the table");
+}
 
-        // Verify the driver is added (can check for driver list update or success message)
-        WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("success-message")));
-        assertTrue(successMessage.getText().contains("Driver added successfully!"), "Driver addition failed!");
+    @Test
+    @Order(2)
+public void testDeleteDriver() {
+    // Open the manage drivers page
+    driver.get("http://localhost:8080/cab-service/pages/manageDrivers.jsp");
 
-        // Verify the driver appears in the table
-        WebElement driverTable = driver.findElement(By.tagName("table"));
-        assertTrue(driverTable.getText().contains("John Doe"), "New driver not found in the table!");
+    // Wait for the table to be visible and ensure it contains the driver "Jane Smith"
+    WebElement driverTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("table")));
+    assertTrue(driverTable.getText().contains("Jane Smith"), "Driver 'Jane Smith' not found in the table");
 
-        // Optionally, check if delete functionality works
-        WebElement deleteButton = driver.findElement(By.xpath("//button[contains(text(),'Delete')]"));
-        deleteButton.click();
-        Alert deleteAlert = wait.until(ExpectedConditions.alertIsPresent());
-        assertEquals("Are you sure you want to delete this driver?", deleteAlert.getText());
-        deleteAlert.accept();
+    // Find the delete button for the driver "Jane Smith" and click it
+    WebElement deleteButton = driver.findElement(By.xpath("//td[contains(text(),'Jane Smith')]/following-sibling::td/form/button"));
+    deleteButton.click();
 
-        // Wait for driver removal and verify
-        wait.until(ExpectedConditions.invisibilityOf(deleteButton));
-        assertFalse(driverTable.getText().contains("John Doe"), "Driver was not deleted successfully!");
-    }
+    // Confirm the deletion in the alert
+    Alert deleteAlert = wait.until(ExpectedConditions.alertIsPresent());
+    String alertMessage = deleteAlert.getText();
+    assertTrue(alertMessage.contains("Are you sure you want to delete this driver?"), "Delete confirmation alert missing");
+    deleteAlert.accept();
 
-    @AfterEach
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+    // Verify success message alert after deletion
+    Alert successAlert = wait.until(ExpectedConditions.alertIsPresent());
+    assertTrue(successAlert.getText().contains("Driver deleted successfully"), "Driver deletion success alert not displayed");
+    successAlert.accept();
+
+    // Ensure driver is removed from table (Check that "Jane Smith" is no longer in the table)
+    driverTable = driver.findElement(By.tagName("table"));
+    assertFalse(driverTable.getText().contains("Jane Smith"), "Driver 'Jane Smith' was not removed from the table after deletion");
+}
+
+@AfterEach
+public void tearDown() {
+    driver.quit();
+}
+
 }
