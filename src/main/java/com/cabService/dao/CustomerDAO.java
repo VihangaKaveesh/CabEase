@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import com.cabService.dao.DBConnection;
 import jakarta.servlet.http.HttpSession;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDAO {
     private Connection connection;
@@ -77,6 +79,51 @@ public class CustomerDAO {
 
         return customerId;
     }
+    
+     // Get all customers without including password
+public List<String[]> getAllCustomers() {
+    List<String[]> customers = new ArrayList<>();
+    String query = "SELECT CustomerID, NIC, Name, Email, Phone FROM customers";  // Excluding Password field
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
 
+        while (rs.next()) {
+            String[] customer = new String[5];  // Changed to 5 instead of 6 to match the selected columns
+            customer[0] = String.valueOf(rs.getInt("CustomerID"));
+            customer[1] = rs.getString("NIC");
+            customer[2] = rs.getString("Name");
+            customer[3] = rs.getString("Email");
+            customer[4] = rs.getString("Phone");
+            customers.add(customer);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return customers;
+}
+
+ 
+
+    // Delete customer
+    public boolean deleteCustomer(int customerId) {
+        boolean success = false;
+        String query = "DELETE FROM customers WHERE CustomerID = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, customerId);
+            int rowsDeleted = stmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                success = true;
+                System.out.println("Customer deleted successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in deleteCustomer: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return success;
+    }
+    
 
 }
