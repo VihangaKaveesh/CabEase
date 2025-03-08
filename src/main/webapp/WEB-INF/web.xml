@@ -20,10 +20,6 @@
         <servlet-name>CustomerServlet</servlet-name>
         <servlet-class>com.cabService.controller.CustomerServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>DriverServlet</servlet-name>
-        <servlet-class>com.cabService.controller.DriverServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/RegisterServlet</url-pattern>
@@ -43,10 +39,6 @@
     <servlet-mapping>
         <servlet-name>CustomerServlet</servlet-name>
         <url-pattern>/CustomerServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DriverServlet</servlet-name>
-        <url-pattern>/DriverServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
