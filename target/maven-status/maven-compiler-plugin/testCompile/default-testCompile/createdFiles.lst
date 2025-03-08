@@ -4,14 +4,11 @@ com\cabService\controller\LoginServletTest.class
 com\cabService\controller\BookingServletTest.class
 com\cabService\controller\RegisterServletTest.class
 com\cabService\dao\CustomerDAOTest.class
-<<<<<<< HEAD
 com\cabService\ui\BookingHistoryUITest.class
-=======
 com\cabService\controller\CustomerServletTest.class
 com\cabService\ui\LoginUITest.class
 com\cabService\dao\ManageCustomerDAOTest.class
 com\cabService\dao\ManagementDAOTest.class
 com\cabService\dao\BookingDAOTest.class
->>>>>>> development
 com\cabService\ui\RegisterUITest.class
 com\cabService\dao\BookingHistoryDAOTest.class
