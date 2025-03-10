@@ -72,5 +72,45 @@ public class DriverDAO {
             stmt.executeUpdate();
         }
     }
+    
+      // Update a driver
+    public void updateDriver(int driverID, String name, String email, String phone, String vehicleModel, String status) throws SQLException {
+        String sql = "UPDATE Drivers SET Name=?, Email=?, Phone=?, VehicleModel=?, Status=? WHERE DriverID=?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            stmt.setString(3, phone);
+            stmt.setString(4, vehicleModel);
+            stmt.setString(5, status);
+            stmt.setInt(6, driverID);
+            stmt.executeUpdate();
+        }
+    }
+    
+    // Get driver details by ID
+    public String[] getDriverByID(int driverID) throws SQLException {
+        String sql = "SELECT * FROM Drivers WHERE DriverID=?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, driverID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String[] driver = new String[9];
+                    driver[0] = String.valueOf(rs.getInt("DriverID"));
+                    driver[1] = rs.getString("NIC");
+                    driver[2] = rs.getString("Name");
+                    driver[3] = rs.getString("Email");
+                    driver[4] = rs.getString("Phone");
+                    driver[5] = rs.getString("LicenseNumber");
+                    driver[6] = rs.getString("VehicleType");
+                    driver[7] = rs.getString("VehicleModel");
+                    driver[8] = rs.getString("Status");
+                    return driver;
+                }
+            }
+        }
+        return null;
+    }
+    
 
 }

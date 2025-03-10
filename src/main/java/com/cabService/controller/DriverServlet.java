@@ -42,9 +42,11 @@ public class DriverServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        try {
+         try {
             if ("add".equals(action)) {
                 addDriver(request, response);
+            } else if ("update".equals(action)) {
+                updateDriver(request, response);
             } else if ("delete".equals(action)) {
                 deleteDriver(request, response);
             } else {
@@ -66,6 +68,19 @@ public class DriverServlet extends HttpServlet {
 
         driverDAO.addDriver(nic, name, email, phone, licenseNumber, vehicleType, vehicleModel);
         response.sendRedirect("pages/manageDrivers.jsp?message= Driver added ");
+    }
+    
+     //edit driver part
+    private void updateDriver(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        int driverID = Integer.parseInt(request.getParameter("driverID"));
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String vehicleModel = request.getParameter("vehicleModel");
+        String status = request.getParameter("status");
+
+        driverDAO.updateDriver(driverID, name, email, phone, vehicleModel, status);
+        response.sendRedirect("pages/manageDrivers.jsp?message= Driver edited successfully");
     }
 
     private void deleteDriver(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
