@@ -1,5 +1,6 @@
 package com.cabService.controller;
 
+import com.cabService.dao.CustomerDAO;
 import com.cabService.dao.DBConnection;
 import com.cabService.dao.DriverDAO;
 import java.io.IOException;
@@ -11,7 +12,21 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DriverServlet extends HttpServlet {
-    protected DriverDAO driverDAO;
+     DriverDAO driverDAO;
+
+    // Default constructor (for production use)
+    public DriverServlet() throws SQLException {
+        this.driverDAO = new DriverDAO(); // Uses real DB connection
+    }
+
+    // Constructor for testing (injects a mock DAO)
+    public DriverServlet(DriverDAO driverDAO) {
+        this.driverDAO = driverDAO;
+    }
+
+//    public DriverServlet(DriverDAO mockDriverDAO) {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
 
     @Override
     public void init() throws ServletException {
@@ -27,9 +42,11 @@ public class DriverServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        try {
+         try {
             if ("add".equals(action)) {
                 addDriver(request, response);
+            } else if ("update".equals(action)) {
+                updateDriver(request, response);
             } else if ("delete".equals(action)) {
                 deleteDriver(request, response);
             } else {
@@ -51,6 +68,19 @@ public class DriverServlet extends HttpServlet {
 
         driverDAO.addDriver(nic, name, email, phone, licenseNumber, vehicleType, vehicleModel);
         response.sendRedirect("pages/manageDrivers.jsp?message= Driver added ");
+    }
+    
+     //edit driver part
+    private void updateDriver(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        int driverID = Integer.parseInt(request.getParameter("driverID"));
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String vehicleModel = request.getParameter("vehicleModel");
+        String status = request.getParameter("status");
+
+        driverDAO.updateDriver(driverID, name, email, phone, vehicleModel, status);
+        response.sendRedirect("pages/manageDrivers.jsp?message= Driver edited successfully");
     }
 
     private void deleteDriver(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {

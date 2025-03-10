@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 Test set: com.cabService.ui.RegisterUITest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 3, Failures: 1, Errors: 2, Skipped: 0, Time elapsed: 11.81 s <<< FAILURE! -- in com.cabService.ui.RegisterUITest
 com.cabService.ui.RegisterUITest.testUIElements -- Time elapsed: 1.042 s <<< ERROR!
 org.openqa.selenium.NoSuchSessionException: 
@@ -279,3 +280,6 @@ Session ID: 320b142cd59ec97cad5f44055e8abf1e
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 
+=======
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.594 s -- in com.cabService.ui.RegisterUITest
+>>>>>>> production

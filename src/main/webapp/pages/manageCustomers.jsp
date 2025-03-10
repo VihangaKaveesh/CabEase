@@ -160,7 +160,6 @@ th {
             <td><%= customer[3] %></td>
             <td><%= customer[4] %></td>
             <td>
-                <a href="editCustomers.jsp?customerID=<%= customer[0] %>">Edit</a> |
                 <form class="deletebtn" action="${pageContext.request.contextPath}/CustomerServlet" method="post" style="display:inline;">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="customerID" value="<%= customer[0] %>">
