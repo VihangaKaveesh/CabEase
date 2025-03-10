@@ -11,6 +11,7 @@ com\cabService\controller\DriverServletTest.class
 com\cabService\controller\CustomerServletTest.class
 com\cabService\ui\LoginUITest.class
 com\cabService\ui\ManageCustomersUITest.class
+com\cabService\dao\editDriverDAOTest.class
 com\cabService\dao\ManageCustomerDAOTest.class
 com\cabService\dao\ManagementDAOTest.class
 com\cabService\dao\BookingDAOTest.class

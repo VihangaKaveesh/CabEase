@@ -65,4 +65,20 @@ class DriverServletTest {
 
         verify(mockResponse).sendRedirect("manageDrivers.jsp");
     }
+    
+      @Test
+    void testDoPost_UpdateDriver_Success() throws ServletException, IOException, SQLException {
+        when(mockRequest.getParameter("action")).thenReturn("update");
+        when(mockRequest.getParameter("driverID")).thenReturn("1");
+        when(mockRequest.getParameter("name")).thenReturn("Jane Doe");
+        when(mockRequest.getParameter("email")).thenReturn("jane@example.com");
+        when(mockRequest.getParameter("phone")).thenReturn("0712345679");
+        when(mockRequest.getParameter("vehicleModel")).thenReturn("Honda Civic");
+        when(mockRequest.getParameter("status")).thenReturn("Active");
+
+        driverServlet.doPost(mockRequest, mockResponse);
+
+        verify(mockDriverDAO).updateDriver(1, "Jane Doe", "jane@example.com", "0712345679", "Honda Civic", "Active");
+        verify(mockResponse).sendRedirect("pages/manageDrivers.jsp?message= Driver edited successfully");
+    }
 }
