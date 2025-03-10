@@ -1,22 +1,16 @@
 package com.cabService.ui;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import org.junit.jupiter.api.AfterEach;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.NoAlertPresentException;
 
 public class BookingHistoryUITest {
 
@@ -25,47 +19,80 @@ public class BookingHistoryUITest {
 
     @BeforeEach
     void setUp() {
-        // Setup ChromeDriver using WebDriverManager
-        WebDriverManager.chromedriver().driverVersion("134.0.6998.36").setup();
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Login as a customer before accessing the page
+        driver.get("http://localhost:8080/cab-service/pages/login.jsp");
+        // Find the email and password fields
+        WebElement emailInput = driver.findElement(By.name("email"));
+        WebElement passwordInput = driver.findElement(By.name("password"));
+        WebElement submitButton = driver.findElement(By.xpath("//button[@type='submit']"));
+
+        // Enter invalid credentials
+        emailInput.sendKeys("john.doe@example.com");
+        passwordInput.sendKeys("password123");
+
+        // Submit the form
+        submitButton.click();
+
     }
 
     @Test
-void testLoginSuccess_Customer() {
-    // Open the login page
-    driver.get("http://localhost:8080/cab-service/pages/login.jsp");
+    void testBookingHistoryPageLoads() {
+        driver.get("http://localhost:8080/cab-service/pages/bookingHistory.jsp");
 
-    // Find the email and password fields
-    WebElement emailInput = driver.findElement(By.name("email"));
-    WebElement passwordInput = driver.findElement(By.name("password"));
-    WebElement submitButton = driver.findElement(By.xpath("//button[@type='submit']"));
+        // Verify the page title
+        assertEquals("Booking History", driver.getTitle(), "Page title is incorrect");
 
-    // Enter valid credentials for customer
-    emailInput.sendKeys("john.doe@example.com");
-    passwordInput.sendKeys("password123");
+        // Check if the table is present
+        WebElement table = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("table")));
+        assertNotNull(table, "Booking history table is not visible");
 
-    // Submit the form
-    submitButton.click();
+        // Verify table headers
+        List<WebElement> headers = table.findElements(By.tagName("th"));
+        assertEquals(7, headers.size(), "Table headers do not match expected columns");
 
-    try {
-        // Wait for the alert to appear
-        WebDriverWait longWait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        Alert alert = longWait.until(ExpectedConditions.alertIsPresent());
+        assertEquals("Pickup Location", headers.get(0).getText());
+        assertEquals("Dropoff Location", headers.get(1).getText());
+        assertEquals("Date", headers.get(2).getText());
+        assertEquals("Vehicle Type", headers.get(3).getText());
+        assertEquals("Price", headers.get(4).getText());
+        assertEquals("Status", headers.get(5).getText());
+        assertEquals("Receipt", headers.get(6).getText());
 
-        // Verify the alert text and accept the alert
-        assertEquals("Welcome Customer!", alert.getText());
-        alert.accept(); // Close the alert
-    } catch (NoAlertPresentException e) {
-        fail("Alert not found: " + e.getMessage()); // Fail the test if the alert doesn't appear
+        // Verify if there are booking records in the table
+        List<WebElement> rows = table.findElements(By.xpath("//tr[position()>1]"));
+        assertTrue(rows.size() > 0, "No booking history found");
+
+        // Validate each row has 7 columns
+        for (WebElement row : rows) {
+            List<WebElement> columns = row.findElements(By.tagName("td"));
+            assertEquals(7, columns.size(), "Row does not have expected 7 columns");
+        }
     }
-}
+
+//    @Test
+//    void testReceiptButtonFunctionality() {
+//        driver.get("http://localhost:8080/cab-service/pages/bookingHistory.jsp");
+//
+//        List<WebElement> receiptButtons = driver.findElements(By.xpath("//form[@action='receipt.jsp']//button"));
+//        if (!receiptButtons.isEmpty()) {
+//            receiptButtons.get(0).click(); // Click the first receipt button
+//            wait.until(ExpectedConditions.urlContains("receipt.jsp"));
+//
+//            // Verify that the receipt page loads
+//            assertTrue(driver.getCurrentUrl().contains("receipt.jsp"), "Receipt page did not open correctly");
+//        } else {
+//            System.out.println("No bookings with a receipt found.");
+//        }
+//    }
 
     @AfterEach
     void tearDown() {
-        // Close the browser after the test
         if (driver != null) {
             driver.quit();
         }

@@ -1,10 +1,12 @@
 com\cabService\controller\LoginServlet.class
 com\mycompany\cab\service\JakartaRestConfiguration.class
+com\cabService\dao\DriverAssignDAO.class
 com\cabService\dao\DriverDAO.class
 com\cabService\controller\BookingHistoryServlet.class
 com\cabService\controller\RegisterServlet.class
 com\cabService\dao\DBConnection.class
 com\cabService\controller\DriverServlet.class
+com\cabService\controller\DriverAssignServlet.class
 com\cabService\controller\CustomerServlet.class
 com\cabService\dao\CustomerDAO.class
 com\cabService\dao\ManagementDAO.class
