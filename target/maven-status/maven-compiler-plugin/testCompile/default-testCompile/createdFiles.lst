@@ -1,8 +1,11 @@
+com\cabService\ui\DriverAssignUITest.class
+com\cabService\dao\DriverAssignDAOTest.class
 com\cabService\controller\BookingHistoryServletTest.class
 com\cabService\ui\RideRequestUITest.class
 com\cabService\controller\LoginServletTest.class
 com\cabService\ui\ManageDriverUITest.class
 com\cabService\dao\DriverDAOTest.class
+com\cabService\controller\DriverAssignServletTest.class
 com\cabService\controller\BookingServletTest.class
 com\cabService\controller\RegisterServletTest.class
 com\cabService\dao\CustomerDAOTest.class
