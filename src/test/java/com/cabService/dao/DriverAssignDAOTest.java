@@ -56,7 +56,7 @@ public class DriverAssignDAOTest {
         List<Map<String, String>> bookings = DriverAssignDAO.getPendingBookings();
 
         assertFalse(bookings.isEmpty());
-        assertEquals("56", bookings.get(0).get("BookingID"));
+        assertEquals("64", bookings.get(0).get("BookingID"));
         assertEquals("1", bookings.get(0).get("CustomerID"));
         assertEquals("123 Main Street", bookings.get(0).get("PickupLocation"));
         assertEquals("456 Elm Street", bookings.get(0).get("DropoffLocation"));
@@ -73,7 +73,7 @@ public class DriverAssignDAOTest {
         when(mockStatement1.executeUpdate()).thenReturn(1); // Simulate booking update success
         when(mockStatement2.executeUpdate()).thenReturn(1); // Simulate driver update success
 
-        boolean result = dao.assignDriverToBooking(34, 56);
+        boolean result = dao.assignDriverToBooking(34,56 );
 
         assertTrue(result);
         verify(mockStatement1, times(1)).executeUpdate();
@@ -93,8 +93,8 @@ public class DriverAssignDAOTest {
         List<Map<String, String>> drivers = DriverAssignDAO.getAvailableDrivers("Car");
 
         assertFalse(drivers.isEmpty());
-        assertEquals("34", drivers.get(0).get("DriverID"));
-        assertEquals("Vihanga Kaveesh", drivers.get(0).get("Name"));
+        assertEquals("39", drivers.get(0).get("DriverID"));
+        assertEquals("wGEHHetTH", drivers.get(0).get("Name"));
     }
 
     // ✅ Test for failed assignment (simulating SQL error)

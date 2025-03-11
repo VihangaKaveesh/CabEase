@@ -25,24 +25,37 @@ public class BookingHistoryUITest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        // Login as a customer before accessing the page
+
+    }
+     // Helper method to perform login with alert handling
+    private void loginAsCustomer() {
         driver.get("http://localhost:8080/cab-service/pages/login.jsp");
-        // Find the email and password fields
-        WebElement emailInput = driver.findElement(By.name("email"));
-        WebElement passwordInput = driver.findElement(By.name("password"));
-        WebElement submitButton = driver.findElement(By.xpath("//button[@type='submit']"));
 
-        // Enter invalid credentials
-        emailInput.sendKeys("john.doe@example.com");
-        passwordInput.sendKeys("password123");
+        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")));
+        WebElement passwordField = driver.findElement(By.name("password"));
+        WebElement loginButton = driver.findElement(By.cssSelector("button[type='submit']"));
 
-        // Submit the form
-        submitButton.click();
+        // Provide valid credentials
+        emailField.sendKeys("john.doe@example.com");
+        passwordField.sendKeys("password123");
+        loginButton.click();
 
+        try {
+            // Wait for and accept login alert
+            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+            assertEquals("Welcome Customer!", alert.getText());
+            alert.accept();
+        } catch (NoAlertPresentException e) {
+            fail("Login success alert not found: " + e.getMessage());
+        }
+
+        // Wait for redirection to the customer dashboard
+        wait.until(ExpectedConditions.urlContains("customerDashboard.jsp"));
     }
 
     @Test
     void testBookingHistoryPageLoads() {
+        loginAsCustomer();
         driver.get("http://localhost:8080/cab-service/pages/bookingHistory.jsp");
 
         // Verify the page title
