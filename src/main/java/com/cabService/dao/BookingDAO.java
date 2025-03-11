@@ -153,4 +153,36 @@ public class BookingDAO {
     }
     return updated;
 }
+       
+      public static HashMap<String, String> getReceiptDetails(int BookingID, Connection conn) {
+        HashMap<String, String> receiptDetails = new HashMap<>();
+        String sql = "SELECT b.BookingID, b.PickupLocation, b.DropoffLocation, b.BookingDate, " +
+                     "p.VehicleType, p.Price, " +
+                     "d.Name, d.Phone, d.VehicleModel, d.LicenseNumber " +
+                     "FROM bookings b " +
+                     "JOIN ridepackages p ON b.PackageID = p.PackageID " +
+                     "JOIN Drivers d ON b.DriverID = d.DriverID " +
+                     "WHERE b.BookingID = ? AND b.Status IN ('Assigned', 'Completed')";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, BookingID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    receiptDetails.put("BookingID", String.valueOf(rs.getInt("BookingID")));
+                    receiptDetails.put("PickupLocation", rs.getString("PickupLocation"));
+                    receiptDetails.put("DropoffLocation", rs.getString("DropoffLocation"));
+                    receiptDetails.put("Date", rs.getString("BookingDate"));
+                    receiptDetails.put("VehicleType", rs.getString("VehicleType"));
+                    receiptDetails.put("Price", String.valueOf(rs.getDouble("Price")));
+                    receiptDetails.put("VehicleModel", rs.getString("VehicleModel"));
+                    receiptDetails.put("LicenseNumber", rs.getString("LicenseNumber"));
+                    receiptDetails.put("DriverName", rs.getString("Name"));
+                    receiptDetails.put("Phone", rs.getString("Phone"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return receiptDetails;
+    }
 }
