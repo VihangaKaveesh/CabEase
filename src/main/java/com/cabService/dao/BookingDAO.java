@@ -93,4 +93,64 @@ public class BookingDAO {
         }
         return bookings;
     }
+       
+       public boolean updateBookingStatus(int bookingID, String status) {
+    boolean updated = false;
+    //Connection conn = null;
+    PreparedStatement ps = null;
+    
+    try {
+        //conn = DBConnection.getConnection();
+        connection.setAutoCommit(false); // Start transaction
+        
+        // Update booking status
+        String sql = "UPDATE Bookings SET Status = ? WHERE BookingID = ?";
+        ps = connection.prepareStatement(sql);
+        ps.setString(1, status);
+        ps.setInt(2, bookingID);
+        int rowsAffected = ps.executeUpdate();
+        
+        if (rowsAffected > 0 && "Completed".equals(status)) {
+            // Retrieve driverID associated with the booking
+            String getDriverSql = "SELECT DriverID FROM Bookings WHERE BookingID = ?";
+            try (PreparedStatement psDriver = connection.prepareStatement(getDriverSql)) {
+                psDriver.setInt(1, bookingID);
+                ResultSet rs = psDriver.executeQuery();
+                
+                if (rs.next()) {
+                    int driverID = rs.getInt("DriverID");
+
+                    if (driverID > 0) { // Ensure driverID exists
+                        // Update the driver's status to "Available"
+                        String updateDriverSql = "UPDATE Drivers SET Status = 'Available' WHERE DriverID = ?";
+                        try (PreparedStatement psUpdateDriver = connection.prepareStatement(updateDriverSql)) {
+                            psUpdateDriver.setInt(1, driverID);
+                            psUpdateDriver.executeUpdate();
+                        }
+                    }
+                }
+            }
+        }
+
+        connection.commit(); // Commit transaction
+        updated = true;
+    } catch (Exception e) {
+        if (connection != null) {
+            try {
+                connection.rollback(); // Rollback on error
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        e.printStackTrace();
+    } finally {
+        try {
+            if (ps != null) ps.close();
+            if (connection != null) connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return updated;
+}
 }
