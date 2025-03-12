@@ -1,5 +1,6 @@
 com\cabService\controller\LoginServlet.class
 com\mycompany\cab\service\JakartaRestConfiguration.class
+com\cabService\controller\LogoutServelt.class
 com\cabService\dao\DriverAssignDAO.class
 com\cabService\dao\DriverDAO.class
 com\cabService\controller\BookingHistoryServlet.class

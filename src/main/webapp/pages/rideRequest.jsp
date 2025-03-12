@@ -4,9 +4,9 @@
 
 <%
     HttpSession sessionObj = session;
-    if (sessionObj == null || sessionObj.getAttribute("userId") == null || !"customer".equals(sessionObj.getAttribute("role"))) {
+    if (session == null || session.getAttribute("userId") == null || !"customer".equals(session.getAttribute("role"))) {
         response.sendRedirect("login.jsp?message=You must log in first");
-        return;
+        return; // Stop the execution of the page
     }
     
     int userId = (int) sessionObj.getAttribute("userId");
@@ -74,7 +74,7 @@ form input, form select{
                <a href="${pageContext.request.contextPath}/pages/customerDashboard.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/pages/rideRequest.jsp">Need a Ride</a>
         <a href="${pageContext.request.contextPath}/pages/bookingHistory.jsp">History</a>
-        <a href="${pageContext.request.contextPath}/pages/login.jsp">Logout</a>
+        <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
         
         </div>
         

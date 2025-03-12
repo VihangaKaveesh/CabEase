@@ -78,7 +78,7 @@
         <a href="${pageContext.request.contextPath}/pages/customerDashboard.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/pages/rideRequest.jsp">Need a Ride</a>
         <a href="${pageContext.request.contextPath}/pages/bookingHistory.jsp">History</a>
-        <a href="${pageContext.request.contextPath}/pages/login.jsp">Logout</a>
+         <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
     </div>
 
     <h2 style="text-align: center;">Booking Receipt</h2>

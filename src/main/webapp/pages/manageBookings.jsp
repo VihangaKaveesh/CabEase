@@ -1,13 +1,20 @@
 <%@ page import="java.sql.*, com.cabService.dao.DBConnection" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%
-    // Session validation for management
-   // HttpSession session = request.getSession(false);
+
+
+    <%
+    //HttpSession session = request.getSession(false); // Get the current session, do not create a new one
+
+    // Check if session exists and if user is logged in
     if (session == null || session.getAttribute("userId") == null || !"management".equals(session.getAttribute("role"))) {
         response.sendRedirect("login.jsp?message=You must log in first");
-        return;
+        return; // Stop the execution of the page
     }
-
+    
+    //int customerId = (int) session.getAttribute("userId"); // Get the logged-in user's customer ID
+        
+%>
+<%
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -98,8 +105,7 @@
         <a href="${pageContext.request.contextPath}/pages/manageDrivers.jsp">Drivers</a>
         <a href="${pageContext.request.contextPath}/pages/driverAssign.jsp">Assign a driver</a>
         <a href="${pageContext.request.contextPath}/pages/manageBookings.jsp">Bookings</a>
-        <a href="${pageContext.request.contextPath}/pages/login.jsp">Logout</a>
-    </div>
+         <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>    </div>
 
     <h2>Manage Bookings</h2>
 
@@ -150,13 +156,16 @@
                 <td><%= vehicleType %></td>
                 <td><%= price %></td>
                 <td class="status-<%= status.toLowerCase() %>"><%= status %></td>
-                <td>
-                    <form action="${pageContext.request.contextPath}/ManageBookingServlet" method="POST">
-                        <input type="hidden" name="bookingID" value="<%= bookingID %>">
-                        <button type="submit" name="action" value="Complete" class="btn-complete" <%= "Completed".equals(status) || "Rejected".equals(status) ? "disabled" : "" %>>Mark Complete</button>
-                        <button type="submit" name="action" value="Reject" class="btn-reject" <%= "Completed".equals(status) || "Rejected".equals(status) ? "disabled" : "" %>>Reject</button>
-                    </form>
-                </td>
+               <td>
+    <% if (!"Completed".equals(status) && !"Rejected".equals(status)) { %>
+        <form action="${pageContext.request.contextPath}/ManageBookingServlet" method="POST">
+            <input type="hidden" name="bookingID" value="<%= bookingID %>">
+            <button type="submit" name="action" value="Complete" class="btn-complete">Mark Complete</button>
+            <button type="submit" name="action" value="Reject" class="btn-reject">Reject</button>
+        </form>
+    <% } %>
+</td>
+
             </tr>
             <%
                     }

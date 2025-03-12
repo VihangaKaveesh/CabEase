@@ -24,6 +24,10 @@
         <servlet-name>receiptServlet</servlet-name>
         <servlet-class>com.cabService.controller.ReceiptServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogoutServelt</servlet-name>
+        <servlet-class>com.cabService.controller.LogoutServelt</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/RegisterServlet</url-pattern>
@@ -51,6 +55,10 @@
     <servlet-mapping>
         <servlet-name>receiptServlet</servlet-name>
         <url-pattern>/receiptServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServelt</servlet-name>
+        <url-pattern>/LogoutServelt</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

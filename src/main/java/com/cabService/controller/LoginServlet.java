@@ -33,35 +33,38 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String email = request.getParameter("email");
+    String password = request.getParameter("password");
 
-        HttpSession session = request.getSession(); // Get the session object
+    HttpSession session = request.getSession(); // Get the session object
 
-        try {
-            // Check if customer login is valid
-            int customerId = customerDAO.validateCustomer(email, password, session);
-            if (customerId > 0) {
-                session.setAttribute("userId", customerId);
-                response.sendRedirect("pages/customerDashboard.jsp?message=Welcome Customer!");
-                return;
-            }
-
-            // Check if management login is valid
-            int managementId = managementDAO.validateManagement(email, password, session);
-            if (managementId > 0) {
-                session.setAttribute("userId", managementId);
-                response.sendRedirect("pages/managementDashboard.jsp?message=Welcome Manager!");
-                return;
-            }
-
-            // If login fails
-            response.sendRedirect("pages/login.jsp?message=Invalid credentials");
-
-        } catch (Exception e) {
-            e.printStackTrace(); // Log error details
-            response.sendRedirect("pages/login.jsp?message=An error occurred during login. Please try again.");
+    try {
+        // Check if customer login is valid
+        int customerId = customerDAO.validateCustomer(email, password, session);
+        if (customerId > 0) {
+            session.setAttribute("userId", customerId);
+            session.setAttribute("role", "customer"); // Store role
+            response.sendRedirect("pages/customerDashboard.jsp?message=Welcome Customer!");
+            return;
         }
+
+        // Check if management login is valid
+        int managementId = managementDAO.validateManagement(email, password, session);
+        if (managementId > 0) {
+            session.setAttribute("userId", managementId);
+            session.setAttribute("role", "management"); // Store role
+            response.sendRedirect("pages/managementDashboard.jsp?message=Welcome Manager!");
+            return;
+        }
+
+        // If login fails
+        response.sendRedirect("pages/login.jsp?message=Invalid credentials");
+
+    } catch (Exception e) {
+        e.printStackTrace(); // Log error details
+        response.sendRedirect("pages/login.jsp?message=An error occurred during login. Please try again.");
     }
+}
+
 }

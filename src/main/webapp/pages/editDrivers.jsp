@@ -74,7 +74,7 @@ form input, form select{
             <a href="${pageContext.request.contextPath}/pages/manageDrivers.jsp">Drivers</a>
              <a href="${pageContext.request.contextPath}/pages/driverAssign.jsp">Assign a driver</a>
             <a href="${pageContext.request.contextPath}/pages/manageBookings.jsp">Bookings</a>
-            <a href="${pageContext.request.contextPath}/pages/login.jsp">Logout</a>
+             <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
         </div>
         
         <h2>Edit Driver</h2>

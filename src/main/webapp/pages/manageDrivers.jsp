@@ -3,12 +3,31 @@
     Created on : Feb 23, 2025, 2:05:46 PM
     Author     : vihan
 --%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.util.*"%>
 <%@ page import="java.sql.Connection, 
          java.sql.SQLException, 
          java.util.List, 
          com.cabService.dao.DBConnection, 
          com.cabService.dao.DriverDAO" %>
+<%
+    //HttpSession session = request.getSession(false); // Get the current session, do not create a new one
+
+    // Check if session exists and if user is logged in
+    if (session == null || session.getAttribute("userId") == null || !"management".equals(session.getAttribute("role"))) {
+        response.sendRedirect("login.jsp?message=You must log in first");
+        return; // Stop the execution of the page
+    }
+    
+    //int customerId = (int) session.getAttribute("userId"); // Get the logged-in user's customer ID
+        
+%>
+<%
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+%>
 
 <!DOCTYPE html>
 <html>
@@ -131,7 +150,7 @@ th {
             <a href="${pageContext.request.contextPath}/pages/manageDrivers.jsp">Drivers</a>
              <a href="${pageContext.request.contextPath}/pages/driverAssign.jsp">Assign a driver</a>
              <a href="${pageContext.request.contextPath}/pages/manageBookings.jsp">Bookings</a>
-            <a href="${pageContext.request.contextPath}/pages/login.jsp">Logout</a>
+             <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
         </div>
         
         
@@ -172,7 +191,7 @@ th {
         </tr>
 
         <%
-            Connection conn = null;
+
             try {
                 conn = DBConnection.getConnection();
                 DriverDAO driverDAO = new DriverDAO(conn);

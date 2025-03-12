@@ -3,9 +3,9 @@
 <%@ page session="true" %>
 <%
     // Check if the user is logged in as a customer
-    if (session.getAttribute("userId") == null || !"customer".equals(session.getAttribute("role"))) {
+    if (session == null || session.getAttribute("userId") == null || !"customer".equals(session.getAttribute("role"))) {
         response.sendRedirect("login.jsp?message=You must log in first");
-        return;
+        return; // Stop the execution of the page
     }
 
     Integer customerID = (Integer) session.getAttribute("userId");
@@ -75,7 +75,7 @@
         <a href="${pageContext.request.contextPath}/pages/customerDashboard.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/pages/rideRequest.jsp">Need a Ride</a>
         <a href="${pageContext.request.contextPath}/pages/bookingHistory.jsp">History</a>
-        <a href="${pageContext.request.contextPath}/pages/login.jsp">Logout</a>
+        <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
     </div>
 
     <h2>Your Booking History</h2>
