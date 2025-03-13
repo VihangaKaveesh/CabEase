@@ -1,5 +1,6 @@
 package com.cabService.ui;
 
+import com.cabService.ui.components.CustomerLoginComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
@@ -16,6 +17,7 @@ public class BookingHistoryUITest {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private CustomerLoginComponent loginComponent;
 
     @BeforeEach
     void setUp() {
@@ -24,38 +26,13 @@ public class BookingHistoryUITest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        loginComponent = new CustomerLoginComponent(driver);
 
 
     }
-     // Helper method to perform login with alert handling
-    private void loginAsCustomer() {
-        driver.get("http://localhost:8080/cab-service/pages/login.jsp");
-
-        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")));
-        WebElement passwordField = driver.findElement(By.name("password"));
-        WebElement loginButton = driver.findElement(By.cssSelector("button[type='submit']"));
-
-        // Provide valid credentials
-        emailField.sendKeys("john.doe@example.com");
-        passwordField.sendKeys("password123");
-        loginButton.click();
-
-        try {
-            // Wait for and accept login alert
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            assertEquals("Welcome Customer!", alert.getText());
-            alert.accept();
-        } catch (NoAlertPresentException e) {
-            fail("Login success alert not found: " + e.getMessage());
-        }
-
-        // Wait for redirection to the customer dashboard
-        wait.until(ExpectedConditions.urlContains("customerDashboard.jsp"));
-    }
-
     @Test
     void testBookingHistoryPageLoads() {
-        loginAsCustomer();
+         loginComponent.loginAsCustomer("john.doe@example.com", "password123");
         driver.get("http://localhost:8080/cab-service/pages/bookingHistory.jsp");
 
         // Verify the page title

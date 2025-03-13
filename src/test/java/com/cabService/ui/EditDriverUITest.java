@@ -1,5 +1,6 @@
 package com.cabService.ui;
 
+import com.cabService.ui.components.ManagerLoginComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
@@ -16,6 +17,7 @@ public class EditDriverUITest {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private ManagerLoginComponent loginComponent;
 
     @BeforeAll
     void setUpClass() {
@@ -28,10 +30,13 @@ public class EditDriverUITest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+          loginComponent = new ManagerLoginComponent(driver);
     }
 
     @Test
     void testUIElements() {
+        loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
+
         driver.get("http://localhost:8080/cab-service/pages/editDrivers.jsp?driverID=13");
 
         WebElement nameInput = driver.findElement(By.name("name"));
@@ -51,6 +56,8 @@ public class EditDriverUITest {
 
    @Test
     void testEditDriver_Success() {
+        loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
+
         driver.get("http://localhost:8080/cab-service/pages/editDrivers.jsp?driverID=13");
 
         WebElement nameInput = driver.findElement(By.name("name"));
@@ -89,6 +96,8 @@ public class EditDriverUITest {
 
     @Test
     void testEditDriver_Failure() {
+        loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
+
         driver.get("http://localhost:8080/cab-service/pages/editDrivers.jsp?driverID=999");
 
         WebElement errorMessage = wait.until(ExpectedConditions.presenceOfElementLocated(

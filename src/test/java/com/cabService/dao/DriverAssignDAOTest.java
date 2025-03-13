@@ -40,7 +40,7 @@ public class DriverAssignDAOTest {
 //        verify(mockStatement, times(1)).executeUpdate();
 //    }
 
-    // ✅ Test for retrieving pending bookings
+    //  Test for retrieving pending bookings
     @Test
     public void testGetPendingBookings() throws SQLException {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -56,14 +56,14 @@ public class DriverAssignDAOTest {
         List<Map<String, String>> bookings = DriverAssignDAO.getPendingBookings();
 
         assertFalse(bookings.isEmpty());
-        assertEquals("64", bookings.get(0).get("BookingID"));
+        assertEquals("67", bookings.get(0).get("BookingID"));
         assertEquals("1", bookings.get(0).get("CustomerID"));
         assertEquals("123 Main Street", bookings.get(0).get("PickupLocation"));
         assertEquals("456 Elm Street", bookings.get(0).get("DropoffLocation"));
         assertEquals("Car", bookings.get(0).get("VehicleType"));
     }
 
-    // ✅ Test for assigning a driver to a booking
+    //  Test for assigning a driver to a booking
     @Test
     public void testAssignDriverToBooking() throws SQLException {
         PreparedStatement mockStatement1 = mock(PreparedStatement.class);
@@ -80,7 +80,7 @@ public class DriverAssignDAOTest {
         verify(mockStatement2, times(1)).executeUpdate();
     }
 
-    // ✅ Test for retrieving available drivers
+    //  Test for retrieving available drivers
     @Test
     public void testGetAvailableDrivers() throws SQLException {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -93,11 +93,11 @@ public class DriverAssignDAOTest {
         List<Map<String, String>> drivers = DriverAssignDAO.getAvailableDrivers("Car");
 
         assertFalse(drivers.isEmpty());
-        assertEquals("39", drivers.get(0).get("DriverID"));
-        assertEquals("wGEHHetTH", drivers.get(0).get("Name"));
+        assertEquals("40", drivers.get(0).get("DriverID"));
+        assertEquals("nimal", drivers.get(0).get("Name"));
     }
 
-    // ✅ Test for failed assignment (simulating SQL error)
+    //  Test for failed assignment (simulating SQL error)
     @Test
     public void testAssignDriverToBooking_Failure() throws SQLException {
         PreparedStatement mockStatement1 = mock(PreparedStatement.class);

@@ -21,7 +21,7 @@ public class RegisterUITest {
 
     private WebDriver driver;
     private WebDriverWait wait;
-
+    
     @BeforeEach
     void setUp() {
         // Setup ChromeDriver using WebDriverManager

@@ -1,5 +1,6 @@
 package com.cabService.ui;
 
+import com.cabService.ui.components.ManagerLoginComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class ManageDriverUITest {
     private WebDriver driver;
     private WebDriverWait wait;
+    private ManagerLoginComponent loginComponent;
     private final String BASE_URL = "http://localhost:8080/cab-service/pages/manageDrivers.jsp";
 
     @BeforeEach
@@ -26,11 +28,13 @@ public class ManageDriverUITest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        loginComponent = new ManagerLoginComponent(driver);
     }
 
     @Test
     @Order(1)
 void testAddDriverWithDummyData() {
+     loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
     // Open the manage drivers page
     driver.get("http://localhost:8080/cab-service/pages/manageDrivers.jsp");
 
@@ -70,6 +74,7 @@ void testAddDriverWithDummyData() {
     @Test
     @Order(2)
 public void testDeleteDriver() {
+     loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
     // Open the manage drivers page
     driver.get("http://localhost:8080/cab-service/pages/manageDrivers.jsp");
 

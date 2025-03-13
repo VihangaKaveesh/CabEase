@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.cabService.ui.RegisterUITest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.593 s -- in com.cabService.ui.RegisterUITest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.713 s -- in com.cabService.ui.RegisterUITest

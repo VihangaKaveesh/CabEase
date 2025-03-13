@@ -14,9 +14,11 @@ com\cabService\dao\ManageCustomerDAOTest.class
 com\cabService\dao\ManagementDAOTest.class
 com\cabService\dao\BookingDAOTest.class
 com\cabService\ui\RegisterUITest.class
+com\cabService\ui\components\ManagerLoginComponent.class
 com\cabService\controller\BookingHistoryServletTest.class
 com\cabService\dao\ManageBookingTest.class
 com\cabService\dao\DriverDAOTest.class
+com\cabService\ui\components\CustomerLoginComponent.class
 com\cabService\controller\RegisterServletTest.class
 com\cabService\controller\DriverServletTest.class
 com\cabService\ui\BookingReceiptUITest.class

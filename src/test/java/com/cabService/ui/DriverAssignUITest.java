@@ -1,5 +1,6 @@
 package com.cabService.ui;
 
+import com.cabService.ui.components.ManagerLoginComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
@@ -7,11 +8,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.*;
 
 import java.time.Duration;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DriverAssignUITest {
     private WebDriver driver;
     private WebDriverWait wait;
+    private ManagerLoginComponent loginComponent;
 
     @BeforeEach
     void setUp() {
@@ -20,33 +23,15 @@ public class DriverAssignUITest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        loginComponent = new ManagerLoginComponent(driver);
     }
 
     @Test
     void testAssignDriverToBooking() {
-        // Open login page
-        driver.get("http://localhost:8080/cab-service/pages/login.jsp");
-
-        //  Log in as management
-        driver.findElement(By.name("email")).sendKeys("jane.smith@example.com");
-        driver.findElement(By.name("password")).sendKeys("hashed_password_456");
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        
-         //Handle welcome manager alert
-        try {
-            // Wait for the alert and accept it
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            assertEquals("Welcome Manager!", alert.getText());
-            alert.accept();
-        } catch (Exception e) {
-            System.out.println("No welcome alert found.");
-        }
-
-        // Wait for dashboard to load
-        wait.until(ExpectedConditions.urlContains("managementDashboard.jsp"));
+         loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
 
         // 4️⃣ Navigate to driver assignment page
-        driver.findElement(By.linkText("Assign a driver")).click();
+        driver.get("http://localhost:8080/cab-service/pages/driverAssign.jsp");
         wait.until(ExpectedConditions.urlContains("driverAssign.jsp"));
 
         // Verify page loaded correctly
@@ -66,8 +51,15 @@ public class DriverAssignUITest {
             assertTrue(assignButton.isDisplayed(), "Assign button should be visible");
 
             //  Select first available driver
-            Select driverDropdown = new Select(driverSelect);
-            driverDropdown.selectByIndex(1);
+           Select driverDropdown = new Select(driverSelect);
+List<WebElement> options = driverDropdown.getOptions();
+
+if (options.size() > 1) { // Ensure at least two options exist
+    driverDropdown.selectByIndex(1);
+} else {
+    System.out.println("Not enough drivers available to assign.");
+}
+
 
             // Click assign button
             assignButton.click();

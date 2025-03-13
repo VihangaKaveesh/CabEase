@@ -1,5 +1,6 @@
 package com.cabService.ui;
 
+import com.cabService.ui.components.ManagerLoginComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
@@ -16,6 +17,7 @@ public class ManageCustomersUITest {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private ManagerLoginComponent loginComponent;
 
     @BeforeEach
     void setUp() {
@@ -24,10 +26,12 @@ public class ManageCustomersUITest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        loginComponent = new ManagerLoginComponent(driver);
     }
 
     @Test
     void testCustomerTableLoads() {
+         loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
         driver.get("http://localhost:8080/cab-service/pages/manageCustomers.jsp");
 
         // Wait for the customer table to be visible

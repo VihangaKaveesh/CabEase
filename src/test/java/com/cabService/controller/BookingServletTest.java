@@ -1,14 +1,12 @@
 package com.cabService.controller;
 
-import com.cabService.dao.BookingDAO;
-import jakarta.servlet.RequestDispatcher;
+
+import com.cabService.service.BookingServletFacade;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 
@@ -16,14 +14,14 @@ import static org.mockito.Mockito.*;
 
 class BookingServletTest {
     private BookingServlet bookingServlet;
-    private BookingDAO mockBookingDAO;
+    private BookingServletFacade mockBookingFacade;
     private HttpServletRequest mockRequest;
     private HttpServletResponse mockResponse;
 
     @BeforeEach
-    void setUp() throws Exception {
-        mockBookingDAO = mock(BookingDAO.class);
-        bookingServlet = new BookingServlet(mockBookingDAO);
+    void setUp() {
+        mockBookingFacade = mock(BookingServletFacade.class);
+        bookingServlet = new BookingServlet(mockBookingFacade);
         mockRequest = mock(HttpServletRequest.class);
         mockResponse = mock(HttpServletResponse.class);
     }
@@ -34,7 +32,7 @@ class BookingServletTest {
         when(mockRequest.getParameter("pickupLocation")).thenReturn("Location A");
         when(mockRequest.getParameter("dropoffLocation")).thenReturn("Location B");
         when(mockRequest.getParameter("packageId")).thenReturn("2");
-        when(mockBookingDAO.addBooking(1, "Location A", "Location B", 2)).thenReturn(true);
+        when(mockBookingFacade.handleBookingRequest(1, "Location A", "Location B", 2)).thenReturn(true);
 
         bookingServlet.doPost(mockRequest, mockResponse);
 
@@ -47,7 +45,7 @@ class BookingServletTest {
         when(mockRequest.getParameter("pickupLocation")).thenReturn("Location A");
         when(mockRequest.getParameter("dropoffLocation")).thenReturn("Location B");
         when(mockRequest.getParameter("packageId")).thenReturn("2");
-        when(mockBookingDAO.addBooking(1, "Location A", "Location B", 2)).thenReturn(false);
+        when(mockBookingFacade.handleBookingRequest(1, "Location A", "Location B", 2)).thenReturn(false);
 
         bookingServlet.doPost(mockRequest, mockResponse);
 

@@ -1,5 +1,6 @@
 package com.cabService.ui;
 
+import com.cabService.ui.components.ManagerLoginComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
@@ -16,6 +17,7 @@ public class ManageBookingUITest {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private ManagerLoginComponent loginComponent;
 
     @BeforeEach
     void setUp() {
@@ -24,40 +26,17 @@ public class ManageBookingUITest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        loginComponent = new ManagerLoginComponent(driver);
 
     }
     
-    // Helper method to perform login with alert handling
-    private void loginAsManager() {
-        driver.get("http://localhost:8080/cab-service/pages/login.jsp");
 
-        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")));
-        WebElement passwordField = driver.findElement(By.name("password"));
-        WebElement loginButton = driver.findElement(By.cssSelector("button[type='submit']"));
-
-        // Provide valid credentials
-        emailField.sendKeys("jane.smith@example.com");
-        passwordField.sendKeys("hashed_password_456");
-        loginButton.click();
-
-        try {
-            // Wait for and accept login alert
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            assertEquals("Welcome Manager!", alert.getText());
-            alert.accept();
-        } catch (NoAlertPresentException e) {
-            fail("Login success alert not found: " + e.getMessage());
-        }
-
-        // Wait for redirection to the customer dashboard
-        wait.until(ExpectedConditions.urlContains("managementDashboard.jsp"));
-    }
     
 
     @Test
     void testManageBookingsPageLoads() {
         
-        loginAsManager();
+         loginComponent.loginAsManager("jane.smith@example.com", "hashed_password_456");
          driver.get("http://localhost:8080/cab-service/pages/manageBookings.jsp");
 
         // Verify the page title
