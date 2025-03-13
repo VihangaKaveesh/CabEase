@@ -1,6 +1,6 @@
 package com.cabService.controller;
 
-import com.cabService.dao.BookingDAO;
+import com.cabService.service.BookingServiceFacade;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,11 +13,11 @@ import java.util.HashMap;
 
 public class BookingHistoryServlet extends HttpServlet {
 
-    private final BookingDAO bookingDAO;
+    private final BookingServiceFacade bookingServiceFacade;
 
     // Constructor Injection for better testability
-    public BookingHistoryServlet(BookingDAO bookingDAO) {
-        this.bookingDAO = bookingDAO;
+    public BookingHistoryServlet(BookingServiceFacade bookingServiceFacade) {
+        this.bookingServiceFacade = bookingServiceFacade;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class BookingHistoryServlet extends HttpServlet {
         int customerId = (int) session.getAttribute("userId");
 
         try {
-            List<HashMap<String, String>> bookings = bookingDAO.getCustomerBookings(customerId);
+            List<HashMap<String, String>> bookings = bookingServiceFacade.getCustomerBookings(customerId);
             request.setAttribute("bookings", bookings);
             request.getRequestDispatcher("pages/bookingHistory.jsp").forward(request, response);
         } catch (SQLException e) {

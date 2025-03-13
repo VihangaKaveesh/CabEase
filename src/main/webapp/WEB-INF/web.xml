@@ -19,6 +19,10 @@
     <servlet>
         <servlet-name>bookingHistoryServlet</servlet-name>
         <servlet-class>com.cabService.controller.BookingHistoryServlet</servlet-class>
+        <init-param>
+        <param-name>bookingServiceFacade</param-name>
+        <param-value>com.cabService.facade.BookingServiceFacade</param-value>
+    </init-param>
     </servlet>
     <servlet>
         <servlet-name>receiptServlet</servlet-name>
@@ -58,7 +62,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutServelt</servlet-name>
-        <url-pattern>/LogoutServelt</url-pattern>
+        <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

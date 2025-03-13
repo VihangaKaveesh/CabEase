@@ -4,7 +4,7 @@
     Author     : vihan
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     //HttpSession session = request.getSession(false); // Get the current session, do not create a new one
 
@@ -54,13 +54,8 @@
     </style>
     </head>
     <body>
-          <div class="navbar">
-               <a href="${pageContext.request.contextPath}/pages/customerDashboard.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/pages/rideRequest.jsp">Need a Ride</a>
-        <a href="${pageContext.request.contextPath}/pages/bookingHistory.jsp">History</a>
-        <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
-       
-    </div>
+           <%-- Include the navigation bar component --%>
+    <%@ include file="components/NavBarComponenet.jsp" %>
 
     <div style="padding: 20px; text-align: center;">
         <h2>Welcome to Our Website</h2>

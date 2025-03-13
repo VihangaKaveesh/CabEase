@@ -1,6 +1,6 @@
 package com.cabService.controller;
 
-import com.cabService.dao.BookingDAO;
+import com.cabService.service.BookingServiceFacade;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 class BookingHistoryServletTest {
 
     private BookingHistoryServlet servlet;
-    private BookingDAO bookingDAO;
+    private BookingServiceFacade bookingServiceFacade;
     private HttpServletRequest request;
     private HttpServletResponse response;
     private HttpSession session;
@@ -30,8 +30,8 @@ class BookingHistoryServletTest {
 
     @BeforeEach
     void setUp() {
-        bookingDAO = mock(BookingDAO.class);
-        servlet = new BookingHistoryServlet(bookingDAO);
+        bookingServiceFacade = mock(BookingServiceFacade.class);
+        servlet = new BookingHistoryServlet(bookingServiceFacade);
 
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
@@ -82,7 +82,7 @@ class BookingHistoryServletTest {
         booking.put("Status", "Completed");
         mockBookings.add(booking);
 
-        when(bookingDAO.getCustomerBookings(customerId)).thenReturn(mockBookings);
+        when(bookingServiceFacade.getCustomerBookings(customerId)).thenReturn(mockBookings);
 
         servlet.doGet(request, response);
 

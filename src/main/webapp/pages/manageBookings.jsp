@@ -1,5 +1,5 @@
 <%@ page import="java.sql.*, com.cabService.dao.DBConnection" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 
     <%
@@ -99,13 +99,8 @@
 </head>
 <body>
 
-    <div class="navbar">
-        <a href="${pageContext.request.contextPath}/pages/customerDashboard.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/pages/manageCustomers.jsp">Customers</a>
-        <a href="${pageContext.request.contextPath}/pages/manageDrivers.jsp">Drivers</a>
-        <a href="${pageContext.request.contextPath}/pages/driverAssign.jsp">Assign a driver</a>
-        <a href="${pageContext.request.contextPath}/pages/manageBookings.jsp">Bookings</a>
-         <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>    </div>
+       <%-- Include the navigation bar component --%>
+    <%@ include file="components/ManagementNavBar.jsp" %>
 
     <h2>Manage Bookings</h2>
 

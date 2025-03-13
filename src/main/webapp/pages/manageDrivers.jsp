@@ -3,6 +3,7 @@
     Created on : Feb 23, 2025, 2:05:46 PM
     Author     : vihan
 --%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.util.*"%>
@@ -143,15 +144,8 @@ th {
     
     </head>
     <body>
-     <!-- Navigation bar -->
-        <div class="navbar">
-            <a href="${pageContext.request.contextPath}/pages/managementDashboard.jsp">Home</a>
-            <a href="${pageContext.request.contextPath}/pages/manageCustomers.jsp">Customers</a>
-            <a href="${pageContext.request.contextPath}/pages/manageDrivers.jsp">Drivers</a>
-             <a href="${pageContext.request.contextPath}/pages/driverAssign.jsp">Assign a driver</a>
-             <a href="${pageContext.request.contextPath}/pages/manageBookings.jsp">Bookings</a>
-             <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
-        </div>
+       <%-- Include the navigation bar component --%>
+    <%@ include file="components/ManagementNavBar.jsp" %>
         
         
          <h2>Driver Management</h2>

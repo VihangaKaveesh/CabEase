@@ -6,7 +6,7 @@
 
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.Connection, 
          java.sql.SQLException, 
          java.util.List, 
@@ -144,15 +144,8 @@ th {
     </head>
     <body>
         
-           <div class="navbar">
-                <a href="${pageContext.request.contextPath}/pages/managementDashboard.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/pages/manageCustomers.jsp">Customers</a>
-        <a href="${pageContext.request.contextPath}/pages/manageDrivers.jsp">Drivers</a>
-         <a href="${pageContext.request.contextPath}/pages/driverAssign.jsp">Assign a driver</a>
-        <a href="${pageContext.request.contextPath}/pages/manageBookings.jsp">Bookings</a>
-        <a href="${pageContext.request.contextPath}/LogoutServelt">Logout</a>
-       
-    </div>
+            <%-- Include the navigation bar component --%>
+    <%@ include file="components/ManagementNavBar.jsp" %>
         <h3>Current Customers</h3>
 <table>
     <tr>
