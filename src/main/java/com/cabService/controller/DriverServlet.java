@@ -1,8 +1,8 @@
 package com.cabService.controller;
 
-import com.cabService.dao.CustomerDAO;
 import com.cabService.dao.DBConnection;
 import com.cabService.dao.DriverDAO;
+import com.cabService.service.DriverService;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -12,37 +12,33 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DriverServlet extends HttpServlet {
-     DriverDAO driverDAO;
+    private DriverService driverService;
 
-    // Default constructor (for production use)
     public DriverServlet() throws SQLException {
-        this.driverDAO = new DriverDAO(); // Uses real DB connection
+        this.driverService = new DriverService(new DriverDAO());
     }
 
-    // Constructor for testing (injects a mock DAO)
-    public DriverServlet(DriverDAO driverDAO) {
-        this.driverDAO = driverDAO;
+    public DriverServlet(DriverService driverService) {
+        this.driverService = driverService;
     }
-
-//    public DriverServlet(DriverDAO mockDriverDAO) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
 
     @Override
     public void init() throws ServletException {
         try {
             Connection conn = DBConnection.getConnection();
-            driverDAO = new DriverDAO(conn);
+            DriverDAO driverDAO = new DriverDAO(conn);
+            driverService = new DriverService(driverDAO);
         } catch (SQLException e) {
             throw new ServletException("Database connection error", e);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+                          throws ServletException, IOException {
         String action = request.getParameter("action");
 
-         try {
+        try {
             if ("add".equals(action)) {
                 addDriver(request, response);
             } else if ("update".equals(action)) {
@@ -57,7 +53,8 @@ public class DriverServlet extends HttpServlet {
         }
     }
 
-    private void addDriver(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void addDriver(HttpServletRequest request, HttpServletResponse response) 
+                           throws SQLException, IOException {
         String nic = request.getParameter("nic");
         String name = request.getParameter("name");
         String email = request.getParameter("email");
@@ -66,12 +63,12 @@ public class DriverServlet extends HttpServlet {
         String vehicleType = request.getParameter("vehicleType");
         String vehicleModel = request.getParameter("vehicleModel");
 
-        driverDAO.addDriver(nic, name, email, phone, licenseNumber, vehicleType, vehicleModel);
-        response.sendRedirect("pages/manageDrivers.jsp?message= Driver added ");
+        driverService.addDriver(nic, name, email, phone, licenseNumber, vehicleType, vehicleModel);
+        response.sendRedirect("pages/manageDrivers.jsp?message=Driver added successfully");
     }
-    
-     //edit driver part
-    private void updateDriver(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+
+    private void updateDriver(HttpServletRequest request, HttpServletResponse response) 
+                              throws SQLException, IOException {
         int driverID = Integer.parseInt(request.getParameter("driverID"));
         String name = request.getParameter("name");
         String email = request.getParameter("email");
@@ -79,17 +76,18 @@ public class DriverServlet extends HttpServlet {
         String vehicleModel = request.getParameter("vehicleModel");
         String status = request.getParameter("status");
 
-        driverDAO.updateDriver(driverID, name, email, phone, vehicleModel, status);
-        response.sendRedirect("pages/manageDrivers.jsp?message= Driver edited successfully");
+        driverService.updateDriver(driverID, name, email, phone, vehicleModel, status);
+        response.sendRedirect("pages/manageDrivers.jsp?message=Driver edited successfully");
     }
 
-    private void deleteDriver(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void deleteDriver(HttpServletRequest request, HttpServletResponse response) 
+                              throws SQLException, IOException {
         try {
             int driverID = Integer.parseInt(request.getParameter("driverID"));
-            driverDAO.deleteDriver(driverID);
-            response.sendRedirect("pages/manageDrivers.jsp?message= Driver deleted successfully");
+            driverService.deleteDriver(driverID);
+            response.sendRedirect("pages/manageDrivers.jsp?message=Driver deleted successfully");
         } catch (NumberFormatException e) {
-            response.sendRedirect("pages/manageDrivers.jsp?message= Invalid driver ID");
+            response.sendRedirect("pages/manageDrivers.jsp?message=Invalid driver ID");
         }
     }
 }

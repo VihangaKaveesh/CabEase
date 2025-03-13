@@ -14,9 +14,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.cabService.dao.CustomerDAO;
+import com.cabService.service.RegistrationService;
+import java.sql.SQLException;
 
 public class RegisterServletTest {
+
     @Mock
     private HttpServletRequest mockRequest;
     
@@ -24,18 +26,18 @@ public class RegisterServletTest {
     private HttpServletResponse mockResponse;
 
     @Mock
-    private CustomerDAO mockCustomerDAO;
+    private RegistrationService mockRegistrationService; // Mocking the facade service
 
     private RegisterServlet registerServlet;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        registerServlet = new RegisterServlet(mockCustomerDAO); // Inject mocked DAO
+        registerServlet = new RegisterServlet(mockRegistrationService); // Inject mocked service
     }
 
     @Test
-    void testDoPost_Success() throws ServletException, IOException {
+    void testDoPost_Success() throws ServletException, IOException, SQLException {
         // Simulate form input
         when(mockRequest.getParameter("nic")).thenReturn("2345667V");
         when(mockRequest.getParameter("name")).thenReturn("sasindu");
@@ -43,8 +45,8 @@ public class RegisterServletTest {
         when(mockRequest.getParameter("password")).thenReturn("password123");
         when(mockRequest.getParameter("phone")).thenReturn("0771234567");
 
-        // Simulate successful registration
-        when(mockCustomerDAO.registerCustomer(anyString(), anyString(), anyString(), anyString(), anyString()))
+        // Simulate successful registration via service
+        when(mockRegistrationService.registerCustomer(anyString(), anyString(), anyString(), anyString(), anyString()))
             .thenReturn(true);
 
         // Run servlet doPost()
@@ -55,7 +57,7 @@ public class RegisterServletTest {
     }
 
     @Test
-    void testDoPost_Failure() throws ServletException, IOException {
+    void testDoPost_Failure() throws ServletException, IOException, SQLException {
         // Simulate form input
         when(mockRequest.getParameter("nic")).thenReturn("2345667V");
         when(mockRequest.getParameter("name")).thenReturn("sasindu");
@@ -63,8 +65,8 @@ public class RegisterServletTest {
         when(mockRequest.getParameter("password")).thenReturn("password123");
         when(mockRequest.getParameter("phone")).thenReturn("0771234567");
 
-        // Simulate failed registration
-        when(mockCustomerDAO.registerCustomer(anyString(), anyString(), anyString(), anyString(), anyString()))
+        // Simulate failed registration via service
+        when(mockRegistrationService.registerCustomer(anyString(), anyString(), anyString(), anyString(), anyString()))
             .thenReturn(false);
 
         // Run servlet doPost()

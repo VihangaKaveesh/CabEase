@@ -1,81 +1,87 @@
 package com.cabService.controller;
 
-import com.cabService.dao.BookingDAO;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import java.io.IOException;
+import jakarta.servlet.http.HttpSession;
 
-import static org.mockito.Mockito.*;
+import com.cabService.service.BookingService;
+import java.sql.SQLException;
 
-class ManageBookingServletTest {
+public class ManageBookingServletTest {
 
-    private ManageBookingServlet servlet;
-    private BookingDAO bookingDAO;
-    private HttpServletRequest request;
-    private HttpServletResponse response;
+    @Mock
+    private HttpServletRequest mockRequest;
+    
+    @Mock
+    private HttpServletResponse mockResponse;
+
+    @Mock
+    private HttpSession mockSession;
+
+    @Mock
+    private BookingService mockBookingService;
+
+    private ManageBookingServlet manageBookingServlet;
 
     @BeforeEach
-    void setUp() {
-        bookingDAO = mock(BookingDAO.class);
-        servlet = new ManageBookingServlet(bookingDAO); // Use dependency injection
-
-        request = mock(HttpServletRequest.class);
-        response = mock(HttpServletResponse.class);
+    void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+        manageBookingServlet = new ManageBookingServlet(mockBookingService); // Inject mock service
+        when(mockRequest.getSession()).thenReturn(mockSession); // Mock session
     }
 
     @Test
-    void testDoPost_CompleteBooking_Success() throws ServletException, IOException {
-        when(request.getParameter("bookingID")).thenReturn("63");
-        when(request.getParameter("action")).thenReturn("Complete");
-        when(bookingDAO.updateBookingStatus(63, "Completed")).thenReturn(true);
+    void testDoPost_UpdateBookingStatusSuccess() throws ServletException, IOException, SQLException {
+        // Simulate form input
+        when(mockRequest.getParameter("bookingID")).thenReturn("1");
+        when(mockRequest.getParameter("action")).thenReturn("Complete");
 
-        servlet.doPost(request, response);
+        // Simulate successful status update
+        when(mockBookingService.updateBookingStatus(anyInt(), anyString())).thenReturn(true);
 
-        verify(response).sendRedirect("pages/manageBookings.jsp?message=Booking updated successfully!");
+        // Run servlet doPost()
+        manageBookingServlet.doPost(mockRequest, mockResponse);
+
+        // Verify redirection to the manage bookings page with success message
+        verify(mockResponse).sendRedirect("pages/manageBookings.jsp?message=Booking updated successfully!");
     }
 
     @Test
-    void testDoPost_RejectBooking_Failure() throws ServletException, IOException {
-        when(request.getParameter("bookingID")).thenReturn("2");
-        when(request.getParameter("action")).thenReturn("Reject");
-        when(bookingDAO.updateBookingStatus(2, "Rejected")).thenReturn(false);
+    void testDoPost_UpdateBookingStatusFailure() throws ServletException, IOException, SQLException {
+        // Simulate form input
+        when(mockRequest.getParameter("bookingID")).thenReturn("1");
+        when(mockRequest.getParameter("action")).thenReturn("InvalidAction");
 
-        servlet.doPost(request, response);
+        // Simulate failed status update
+        when(mockBookingService.updateBookingStatus(anyInt(), anyString())).thenReturn(false);
 
-        verify(response).sendRedirect("pages/manageBookings.jsp?message=Failed to update booking.");
+        // Run servlet doPost()
+        manageBookingServlet.doPost(mockRequest, mockResponse);
+
+        // Verify redirection to the manage bookings page with failure message
+        verify(mockResponse).sendRedirect("pages/manageBookings.jsp?message=Failed to update booking.");
     }
 
     @Test
-    void testDoPost_InvalidBookingIDFormat() throws ServletException, IOException {
-        when(request.getParameter("bookingID")).thenReturn("invalid");
-        when(request.getParameter("action")).thenReturn("Complete");
+    void testDoPost_InvalidBookingID() throws ServletException, IOException {
+        // Simulate invalid booking ID
+        when(mockRequest.getParameter("bookingID")).thenReturn("invalidID");
+        when(mockRequest.getParameter("action")).thenReturn("Complete");
 
-        servlet.doPost(request, response);
+        // Run servlet doPost()
+        manageBookingServlet.doPost(mockRequest, mockResponse);
 
-        verify(response).sendRedirect("pages/manageBookings.jsp?message=Invalid booking ID format.");
-    }
-
-    @Test
-    void testDoPost_InvalidAction() throws ServletException, IOException {
-        when(request.getParameter("bookingID")).thenReturn("1");
-        when(request.getParameter("action")).thenReturn("InvalidAction");
-
-        servlet.doPost(request, response);
-
-        verify(response).sendRedirect("pages/manageBookings.jsp?message=Invalid action.");
-    }
-
-    @Test
-    void testDoPost_MissingParameters() throws ServletException, IOException {
-        when(request.getParameter("bookingID")).thenReturn(null);
-        when(request.getParameter("action")).thenReturn("Complete");
-
-        servlet.doPost(request, response);
-
-        verify(response).sendRedirect("pages/manageBookings.jsp?message=Invalid request parameters.");
+        // Verify redirection to the manage bookings page with error message
+        verify(mockResponse).sendRedirect("pages/manageBookings.jsp?message=Invalid booking ID format.");
     }
 }

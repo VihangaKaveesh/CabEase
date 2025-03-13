@@ -1,6 +1,7 @@
 package com.cabService.controller;
 
 import com.cabService.dao.DriverDAO;
+import com.cabService.service.DriverService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,15 +17,14 @@ import static org.mockito.Mockito.*;
 class DriverServletTest {
     
     private DriverServlet driverServlet;
-    private DriverDAO mockDriverDAO;
+    private DriverService mockDriverService;
     private HttpServletRequest mockRequest;
     private HttpServletResponse mockResponse;
 
-    @BeforeEach
+     @BeforeEach
     void setUp() throws Exception {
-        mockDriverDAO = mock(DriverDAO.class);
-        driverServlet = new DriverServlet();
-        driverServlet.driverDAO = mockDriverDAO; // Injecting mock DAO
+        mockDriverService = mock(DriverService.class);
+        driverServlet = new DriverServlet(mockDriverService); // Injecting mock service
         mockRequest = mock(HttpServletRequest.class);
         mockResponse = mock(HttpServletResponse.class);
     }
@@ -42,8 +42,8 @@ class DriverServletTest {
 
         driverServlet.doPost(mockRequest, mockResponse);
 
-        verify(mockDriverDAO).addDriver("123456789V", "John Doe", "john@example.com", "0712345678", "B123456", "Car", "Toyota Prius");
-        verify(mockResponse).sendRedirect("pages/manageDrivers.jsp?message= Driver added ");
+        verify(mockDriverService).addDriver("123456789V", "John Doe", "john@example.com", "0712345678", "B123456", "Car", "Toyota Prius");
+        verify(mockResponse).sendRedirect("pages/manageDrivers.jsp?message=Driver added successfully");
     }
 
     @Test
@@ -53,8 +53,8 @@ class DriverServletTest {
 
         driverServlet.doPost(mockRequest, mockResponse);
 
-        verify(mockDriverDAO).deleteDriver(1);
-        verify(mockResponse).sendRedirect("pages/manageDrivers.jsp?message= Driver deleted successfully");
+        verify(mockDriverService).deleteDriver(1);
+        verify(mockResponse).sendRedirect("pages/manageDrivers.jsp?message=Driver deleted successfully");
     }
 
     @Test
@@ -78,7 +78,7 @@ class DriverServletTest {
 
         driverServlet.doPost(mockRequest, mockResponse);
 
-        verify(mockDriverDAO).updateDriver(1, "Jane Doe", "jane@example.com", "0712345679", "Honda Civic", "Active");
-        verify(mockResponse).sendRedirect("pages/manageDrivers.jsp?message= Driver edited successfully");
+        verify(mockDriverService).updateDriver(1, "Jane Doe", "jane@example.com", "0712345679", "Honda Civic", "Active");
+        verify(mockResponse).sendRedirect("pages/manageDrivers.jsp?message=Driver edited successfully");
     }
 }

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.HashMap;
 
+//booking history servlet
 public class BookingServiceFacade {
     private final BookingDAO bookingDAO;
 

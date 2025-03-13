@@ -7,6 +7,7 @@ package com.cabService.service;
 import com.cabService.dao.BookingDAO;
 import java.sql.SQLException;
 
+//booking servlet
 public class BookingServletFacade {
     private BookingDAO bookingDAO;
 

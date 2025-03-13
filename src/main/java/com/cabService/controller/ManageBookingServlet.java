@@ -1,26 +1,25 @@
 package com.cabService.controller;
 
+import com.cabService.dao.BookingDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.cabService.dao.BookingDAO;
+import com.cabService.service.BookingService;
 import java.sql.SQLException;
 
-/**
- * Servlet for managing booking status updates.
- */
+
 public class ManageBookingServlet extends HttpServlet {
 
-    private BookingDAO bookingDAO;
+    private BookingService bookingService;
 
     public ManageBookingServlet() throws SQLException {
-        this.bookingDAO = new BookingDAO(); // Default constructor
+        this.bookingService = new BookingService(new BookingDAO()); // Default constructor
     }
 
-    public ManageBookingServlet(BookingDAO bookingDAO) {
-        this.bookingDAO = bookingDAO; // Dependency injection for testing
+    public ManageBookingServlet(BookingService bookingService) {
+        this.bookingService = bookingService; // Dependency injection for testing
     }
 
     @Override
@@ -38,18 +37,9 @@ public class ManageBookingServlet extends HttpServlet {
             }
 
             int bookingID = Integer.parseInt(bookingIDParam);
-            String status = "";
 
-            if ("Complete".equals(action)) {
-                status = "Completed";
-            } else if ("Reject".equals(action)) {
-                status = "Rejected";
-            } else {
-                response.sendRedirect(redirectURL + "?message=Invalid action.");
-                return;
-            }
-
-            boolean success = bookingDAO.updateBookingStatus(bookingID, status);
+            // Call service layer to update booking status
+            boolean success = bookingService.updateBookingStatus(bookingID, action);
 
             response.sendRedirect(redirectURL + "?message=" + (success ? "Booking updated successfully!" : "Failed to update booking."));
 
