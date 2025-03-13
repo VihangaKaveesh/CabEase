@@ -7,19 +7,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-import com.cabService.dao.CustomerDAO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.cabService.service.CustomerService;
 
 //@WebServlet("/CustomerServlet")
 public class CustomerServlet extends HttpServlet {
     
-    private CustomerDAO customerDAO;
+    private CustomerService customerService;
 
     // Dependency Injection for testing purposes
-    public CustomerServlet(CustomerDAO customerDAO) {
-        this.customerDAO = customerDAO;
+    public CustomerServlet(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     // Default constructor for normal servlet initialization
@@ -27,12 +26,12 @@ public class CustomerServlet extends HttpServlet {
         super();
     }
 
-    // Initialize DAO
+    // Initialize Service
     @Override
     public void init() throws ServletException {
-        if (customerDAO == null) {
+        if (customerService == null) {
             try {
-                customerDAO = new CustomerDAO();
+                customerService = new CustomerService();
             } catch (SQLException ex) {
                 Logger.getLogger(CustomerServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -44,9 +43,7 @@ public class CustomerServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
-            if ("add".equals(action)) {
-//                addCustomer(request, response);
-            } else if ("delete".equals(action)) {
+            if ("delete".equals(action)) {
                 deleteCustomer(request, response);
             } else {
                 response.sendRedirect("pages/manageCustomers.jsp");
@@ -56,11 +53,10 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
-
-    // Delete customer part
+    // Delete customer method using Facade
     private void deleteCustomer(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         int customerId = Integer.parseInt(request.getParameter("customerID"));
-        boolean success = customerDAO.deleteCustomer(customerId);
+        boolean success = customerService.deleteCustomer(customerId);
         response.sendRedirect("pages/manageCustomers.jsp?message=" + (success ? "Customer deleted successfully" : "Failed to delete customer"));
     }
 }

@@ -11,6 +11,7 @@ com\cabService\controller\DriverServlet.class
 com\cabService\controller\DriverAssignServlet.class
 com\cabService\controller\CustomerServlet.class
 com\cabService\controller\ManageBookingServlet.class
+com\cabService\service\CustomerService.class
 com\cabService\dao\CustomerDAO.class
 com\cabService\service\BookingServiceFacade.class
 com\cabService\dao\ManagementDAO.class
